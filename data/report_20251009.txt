@@ -1,0 +1,158 @@
+Daily Market Report - 2025-10-09
+============================================================
+
+Stocks Up More Than 10.00%
+------------------------------------------------------------
+- CRML: Critical Metals Corp | 24.77% (Close: 14.71, Prev Close: 11.79) [Sector: Materials | Industry: Metals & Mining]
+- KDK: Kodiak AI Inc | 23.05% (Close: 9.77, Prev Close: 7.94) [Sector: Consumer Discretionary | Industry: Automobile Components]
+- TLRY: Tilray Brands Inc | 22.09% (Close: 2.10, Prev Close: 1.72) [Sector: Health Care | Industry: Pharmaceuticals]
+- SYRE: Spyre Therapeutics Inc | 19.74% (Close: 21.17, Prev Close: 17.68) [Sector: Health Care | Industry: Biotechnology]
+- PATH: UiPath Inc | 18.81% (Close: 18.51, Prev Close: 15.58) [Sector: Information Technology | Industry: Software]
+- NEOG: Neogen Corp | 16.49% (Close: 6.78, Prev Close: 5.82) [Sector: Health Care | Industry: Health Care Equipment & Supplies]
+- AKRO: Akero Therapeutics Inc | 16.33% (Close: 54.08, Prev Close: 46.49) [Sector: Health Care | Industry: Biotechnology]
+- USAR: USA Rare Earth Inc | 14.99% (Close: 31.07, Prev Close: 27.02) [Sector: Materials | Industry: Metals & Mining]
+- UAMY: U.S. Antimony Corp | 14.29% (Close: 10.88, Prev Close: 9.52) [Sector: Materials | Industry: Metals & Mining]
+- ORKA: Oruka Therapeutics Inc | 12.98% (Close: 25.55, Prev Close: 22.61) [Sector: Health Care | Industry: Biotechnology]
+- APGE: Apogee Therapeutics Inc | 12.64% (Close: 53.21, Prev Close: 47.24) [Sector: Health Care | Industry: Biotechnology]
+- CDTX: Cidara Therapeutics Inc | 12.44% (Close: 110.76, Prev Close: 98.51) [Sector: Health Care | Industry: Biotechnology]
+- BHVN: Biohaven Ltd | 12.32% (Close: 17.23, Prev Close: 15.34) [Sector: Health Care | Industry: Biotechnology]
+- NB: NioCorp Developments Ltd | 12.20% (Close: 9.84, Prev Close: 8.77) [Sector: Materials | Industry: Metals & Mining]
+- METC: Ramaco Resources Inc | 11.67% (Close: 46.33, Prev Close: 41.49) [Sector: Materials | Industry: Metals & Mining]
+- WVE: Wave Life Sciences Ltd | 11.43% (Close: 8.19, Prev Close: 7.35) [Sector: Health Care | Industry: Pharmaceuticals]
+- RLAY: Relay Therapeutics Inc | 10.97% (Close: 6.78, Prev Close: 6.11) [Sector: Health Care | Industry: Biotechnology]
+- WULF: Terawulf Inc. | 10.49% (Close: 13.59, Prev Close: 12.30) [Sector: Information Technology | Industry: Software]
+
+SMA Events
+------------------------------------------------------------
+- CENTA: death_cross (Close 27.37; SMA50 31.96; SMA200 32.03)
+- HESM: death_cross (Close 32.76; SMA50 39.07; SMA200 39.20)
+- V: death_cross (Close 347.04; SMA50 343.60; SMA200 343.67)
+- CCS: golden_cross (Close 59.00; SMA50 64.12; SMA200 64.02)
+- DYN: golden_cross (Close 14.68; SMA50 12.69; SMA200 12.66)
+- NAK: golden_cross (Close 1.96; SMA50 0.99; SMA200 0.98)
+
+Sector Leaders (Top Average % Gain)
+------------------------------------------------------------
+- Health Care: Avg Change 0.32% (Top: TLRY 22.09% - Tilray Brands Inc)
+- Information Technology: Avg Change -0.05% (Top: PATH 18.81% - UiPath Inc)
+- Consumer Staples: Avg Change -0.25% (Top: KVUE 4.73% - Kenvue Inc)
+- Utilities: Avg Change -0.42% (Top: KEN 4.53% - Kenon Holdings Ltd)
+- Financials: Avg Change -0.66% (Top: DLO 5.53% - DLocal Limited)
+- Communication Services: Avg Change -0.77% (Top: ASTS 6.88% - AST SpaceMobile Inc)
+- Real Estate: Avg Change -0.83% (Top: NMRK 1.69% - Newmark Group Inc)
+- Consumer Discretionary: Avg Change -1.35% (Top: KDK 23.05% - Kodiak AI Inc)
+- Industrials: Avg Change -1.39% (Top: SES 7.97% - SES AI Corp)
+- Energy: Avg Change -1.47% (Top: UUUU 9.44% - Energy Fuels Inc)
+- Materials: Avg Change -2.04% (Top: CRML 24.77% - Critical Metals Corp)
+
+Industry Leaders (Top Average % Gain)
+------------------------------------------------------------
+- Transportation Infrastructure: Avg Change 2.21% (Top: CAAP 2.21% - Corporacion America Airports SA)
+- Biotechnology: Avg Change 1.45% (Top: SYRE 19.74% - Spyre Therapeutics Inc)
+- Beverages: Avg Change 1.27% (Top: PEP 4.23% - PepsiCo Inc)
+- Electrical Equipment: Avg Change 1.20% (Top: SES 7.97% - SES AI Corp)
+- Pharmaceuticals: Avg Change 0.88% (Top: TLRY 22.09% - Tilray Brands Inc)
+- IT Services: Avg Change 0.33% (Top: APLD 4.83% - Applied Digital Corp)
+- Software: Avg Change 0.30% (Top: PATH 18.81% - UiPath Inc)
+- Communications Equipment: Avg Change 0.27% (Top: NTGR 8.92% - NETGEAR Inc)
+- Independent Power & Renewable Electricity Producers: Avg Change 0.25% (Top: KEN 4.53% - Kenon Holdings Ltd)
+- Wireless Telecommunication Services: Avg Change 0.21% (Top: RCI 1.86% - Rogers Communications Inc)
+- Tobacco: Avg Change 0.21% (Top: TPB 1.67% - Turning Point Brands Inc)
+- Diversified Telecommunication Services: Avg Change 0.16% (Top: ASTS 6.88% - AST SpaceMobile Inc)
+- Water Utilities: Avg Change 0.09% (Top: MSEX 2.46% - Middlesex Water Co)
+- Health Care REITs: Avg Change 0.07% (Top: AHR 0.90% - American Healthcare REIT Inc)
+- Passenger Airlines: Avg Change -0.07% (Top: DLAKF 4.33% - Deutsche Lufthansa AG)
+- Diversified REITs: Avg Change -0.08% (Top: EPRT 0.96% - Essential Properties Realty Trust Inc)
+- Retail REITs: Avg Change -0.13% (Top: NTST 0.71% - NETSTREIT Corp)
+- Broadline Retail: Avg Change -0.14% (Top: MELI 4.36% - MercadoLibre Inc)
+- Entertainment: Avg Change -0.18% (Top: CNK 3.38% - Cinemark Holdings Inc)
+- Consumer Finance: Avg Change -0.22% (Top: SOFI 1.53% - SoFi Technologies Inc)
+- Semiconductors & Semiconductor Equipment: Avg Change -0.25% (Top: RGTI 8.98% - Rigetti Computing Inc)
+- Hotels, Restaurants & Leisure: Avg Change -0.33% (Top: DKNG 3.59% - DraftKings Inc)
+- Electric Utilities: Avg Change -0.39% (Top: CEG 3.30% - Constellation Energy Corp)
+- Household Products: Avg Change -0.43% (Top: CLX 0.34% - Clorox Co (The))
+- Technology Hardware, Storage & Peripherals: Avg Change -0.44% (Top: IONQ 4.31% - IonQ Inc)
+- Banks: Avg Change -0.50% (Top: BNPQF 3.23% - BNP Paribas)
+- Consumer Staples Distribution & Retail: Avg Change -0.56% (Top: COST 3.07% - Costco Wholesale Corp)
+- Financial Services: Avg Change -0.59% (Top: DLO 5.53% - DLocal Limited)
+- Hotel & Resort REITs: Avg Change -0.65% (Top: PK -0.65% - Park Hotels & Resorts Inc)
+- Personal Care Products: Avg Change -0.66% (Top: KVUE 4.73% - Kenvue Inc)
+- Food Products: Avg Change -0.67% (Top: GPDNF 2.47% - Danone SA)
+- Health Care Equipment & Supplies: Avg Change -0.67% (Top: NEOG 16.49% - Neogen Corp)
+- Capital Markets: Avg Change -0.69% (Top: GLXY 2.01% - Galaxy Digital Inc)
+- Specialized REITs: Avg Change -0.71% (Top: SBAC -0.06% - SBA Communications Corp)
+- Residential REITs: Avg Change -0.76% (Top: AVB -0.31% - AvalonBay Communities Inc.)
+- Gas Utilities: Avg Change -0.78% (Top: MDU 1.30% - MDU Resources Group Inc.)
+- Real Estate Management & Development: Avg Change -0.85% (Top: NMRK 1.69% - Newmark Group Inc)
+- Life Sciences Tools & Services: Avg Change -0.87% (Top: BRKR 3.75% - Bruker Corporation)
+- Health Care Providers & Services: Avg Change -0.90% (Top: BKD 9.36% - Brookdale Senior Living Inc)
+- Multi-Utilities: Avg Change -0.90% (Top: CMS 0.12% - CMS Energy Corp)
+- Health Care Technology: Avg Change -0.95% (Top: GDRX 5.69% - GoodRx Holdings Inc)
+- Interactive Media & Services: Avg Change -0.97% (Top: RDDT 4.65% - Reddit Inc)
+- Electronic Equipment, Instruments & Components: Avg Change -0.99% (Top: COHR 4.87% - Coherent Corp)
+- Automobile Components: Avg Change -1.08% (Top: KDK 23.05% - Kodiak AI Inc)
+- Insurance: Avg Change -1.09% (Top: ROOT 1.53% - Root Inc)
+- Mortgage Real Estate Investment Trusts (REITs): Avg Change -1.10% (Top: EFC -1.10% - Ellington Financial Inc)
+- Oil, Gas & Consumable Fuels: Avg Change -1.24% (Top: UUUU 9.44% - Energy Fuels Inc)
+- Diversified Consumer Services: Avg Change -1.32% (Top: SUPX 1.84% - SuperX AI Technology Ltd)
+- Distributors: Avg Change -1.34% (Top: PLBL -0.61% - Polibeli Group Ltd)
+- Construction Materials: Avg Change -1.35% (Top: JHX 0.23% - James Hardie Industries Plc)
+- Trading Companies & Distributors: Avg Change -1.41% (Top: CTOS 3.18% - Custom Truck One Source Inc)
+- Construction & Engineering: Avg Change -1.42% (Top: AMRC 2.44% - Ameresco Inc)
+- Leisure Products: Avg Change -1.52% (Top: PTON 0.14% - Peloton Interactive Inc)
+- Specialty Retail: Avg Change -1.57% (Top: CHWY 2.27% - Chewy Inc)
+- Paper & Forest Products: Avg Change -1.57% (Top: LPX -0.23% - Louisiana-Pacific Corp)
+- Industrial REITs: Avg Change -1.62% (Top: COLD -0.89% - Americold Realty Trust Inc)
+- Aerospace & Defense: Avg Change -1.64% (Top: EVEX 3.14% - Eve Holding Inc)
+- Commercial Services & Supplies: Avg Change -1.71% (Top: PBI 3.50% - Pitney Bowes Inc.)
+- Industrial Conglomerates: Avg Change -1.72% (Top: BBUC -0.48% - Brookfield Business Corp)
+- Machinery: Avg Change -1.73% (Top: RBC 0.59% - RBC Bearings Inc)
+- Professional Services: Avg Change -1.75% (Top: MAN 0.75% - ManpowerGroup Inc)
+- Ground Transportation: Avg Change -1.79% (Top: CAR 0.38% - Avis Budget Group Inc)
+- Metals & Mining: Avg Change -2.00% (Top: CRML 24.77% - Critical Metals Corp)
+- Building Products: Avg Change -2.01% (Top: ROCK 0.68% - Gibraltar Industries Inc)
+- Chemicals: Avg Change -2.03% (Top: ALB 5.25% - Albemarle Corp)
+- Media: Avg Change -2.14% (Top: DV 0.71% - DoubleVerify Holdings Inc)
+- Textiles, Apparel & Luxury Goods: Avg Change -2.14% (Top: FIGS 0.58% - FIGS Inc)
+- Energy Equipment & Services: Avg Change -2.20% (Top: VTOL 0.98% - Bristow Group Inc)
+- Marine Transportation: Avg Change -2.26% (Top: CMRE 0.09% - Costamare Inc)
+- Air Freight & Logistics: Avg Change -2.36% (Top: UPS -1.12% - United Parcel Service Inc)
+- Household Durables: Avg Change -2.48% (Top: CCS 0.37% - Century Communities Inc)
+- Containers & Packaging: Avg Change -2.67% (Top: SEE 0.95% - Sealed Air Corp)
+- Automobiles: Avg Change -3.07% (Top: RIVN -0.30% - Rivian Automotive Inc)
+- Office REITs: Avg Change -5.63% (Top: JBGS -5.63% - JBG SMITH Properties)
+
+Unusual Volume (>= 3x rolling average)
+------------------------------------------------------------
+- TLRY: Volume 302,863,398 (~4.12x avg 73591852) | Change 22.09%
+- NVTS: Volume 122,956,676 (~4.95x avg 24828684) | Change 3.36%
+- PATH: Volume 99,862,094 (~4.85x avg 20572640) | Change 18.81%
+- CRML: Volume 44,023,354 (~3.96x avg 11121928) | Change 24.77%
+- AKRO: Volume 37,395,955 (~32.71x avg 1143370) | Change 16.33%
+- GDRX: Volume 33,145,333 (~9.95x avg 3330162) | Change 5.69%
+- DAL: Volume 29,289,534 (~3.73x avg 7843387) | Change 4.29%
+- USAR: Volume 26,661,663 (~3.02x avg 8832817) | Change 14.99%
+- ALIT: Volume 23,772,480 (~3.07x avg 7734439) | Change -3.77%
+- RACE: Volume 4,872,852 (~14.55x avg 334902) | Change -14.99%
+- APGE: Volume 4,069,628 (~7.53x avg 540649) | Change 12.64%
+- DGNX: Volume 3,906,976 (~6.35x avg 615334) | Change 1.29%
+- KRKNF: Volume 3,025,132 (~3.82x avg 790888) | Change -4.65%
+- SYRE: Volume 2,800,140 (~4.61x avg 607009) | Change 19.74%
+- ODD: Volume 2,718,917 (~6.59x avg 412781) | Change -11.26%
+- TASK: Volume 2,301,300 (~3.89x avg 592216) | Change -1.80%
+- SUPN: Volume 2,131,210 (~3.20x avg 666428) | Change 3.15%
+- HSII: Volume 1,956,480 (~8.39x avg 233085) | Change 0.14%
+- NTGR: Volume 1,860,245 (~5.22x avg 356369) | Change 8.92%
+- MAIN: Volume 1,696,573 (~3.03x avg 560820) | Change -5.73%
+- IVPAF: Volume 1,205,585 (~3.51x avg 343085) | Change -1.75%
+- ROCK: Volume 1,091,812 (~4.57x avg 238674) | Change 0.68%
+- AZZ: Volume 1,003,562 (~3.82x avg 262626) | Change -4.90%
+- SSII: Volume 265,150 (~4.70x avg 56391) | Change 7.36%
+- RUPRF: Volume 216,988 (~5.42x avg 40020) | Change -3.99%
+- OCS: Volume 179,550 (~6.14x avg 29242) | Change 6.34%
+- CCEC: Volume 74,239 (~6.29x avg 11802) | Change -2.98%
+- CIAFF: Volume 70,054 (~3.61x avg 19379) | Change 1.17%
+- IMPUF: Volume 3,477 (~5.39x avg 645) | Change -7.61%
+- ZFSVF: Volume 684 (~7.05x avg 97) | Change -3.83%
+
+End of report.

@@ -1,0 +1,7 @@
+pandas
+sqlalchemy
+pymysql
+xlrd>=2.0.1
+polygon-api-client
+PyYAML
+openai-agents-0.3.3
