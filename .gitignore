@@ -2,3 +2,5 @@
 .pyc
 .idea
 .venv
+data/
+__pycache__
