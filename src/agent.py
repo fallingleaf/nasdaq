@@ -1,7 +1,8 @@
 import os
 import asyncio
+import uuid
 
-from agents import Agent, function_tool, Runner, WebSearchTool
+from agents import Agent, function_tool, Runner, SQLiteSession
 from sqlalchemy import text
 from db import (
     create_engine_from_config,
@@ -14,7 +15,7 @@ MODEL = "gpt-5-mini"
 
 DB_INSTRUCTIONS = """
 Handle company, stock price and SMA event information.
-Form SQL query and read data from stock database.
+Form MySQL query and read data from stock database.
 
 There are 3 SQL tables:
     - companies: contains company sticker information.
@@ -64,10 +65,11 @@ def read_report_date(report_date: str) -> str:
 databse_agent = Agent(
     name="Stock Database Agent",
     instructions=DB_INSTRUCTIONS,
+    model=MODEL,
     tools = [query_stock_data],
 )
 
-report_agent = Agent(
+_report_agent = Agent(
     name="Stock Report Agent",
     instructions=REPORT_INSTRUCTIONS,
     tools=[read_report_date],
@@ -76,17 +78,29 @@ report_agent = Agent(
 agent = Agent(
     name="Stock Agent",
     instructions=(
-        "Answer user's question about stock market"
-        "If asking about stock report, hand off to report agent."
-        "If no report found or any other stock information, hand off to database agent."
+        "Answer user's questions about stock market"
     ),
     model=MODEL,
-    handoffs=[databse_agent, report_agent]
+    tools=[
+        databse_agent.as_tool(
+            tool_name="stock_database_agent",
+            tool_description="Handle stock database request."
+        )
+    ]
 )
 
 async def main():
-    result = await Runner.run(agent, "Find SMA events for NBIS stock")
-    print(result.final_output)
+    _id = str(uuid.uuid4())
+    session = SQLiteSession(_id)
+
+    print("Agent: Hello, I'm stock agent!")
+    while True:
+        message = input("You: ")
+        if message in ("q", "quit"):
+            print("Goodbye!")
+            break
+        result = await Runner.run(agent, message, session=session)
+        print("Agent: ", result.final_output)
 
 
 if __name__ == "__main__":
