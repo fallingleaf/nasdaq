@@ -161,7 +161,7 @@ def to_price_row(
     aggregate: polygon_models.Agg | polygon_models.GroupedDailyAgg,
     trade_date: date | None = None,
 ) -> Dict[str, object]:
-    timestamp = getattr(aggregate, "t", None)
+    timestamp = getattr(aggregate, "timestamp", None)
     if trade_date is None:
         if timestamp is None:
             raise ValueError("Aggregate is missing timestamp and trade_date is not provided.")
@@ -171,12 +171,12 @@ def to_price_row(
     return {
         "symbol": symbol,
         "trade_date": trade_dt,
-        "open": aggregate.o,
-        "high": aggregate.h,
-        "low": aggregate.l,
-        "close": aggregate.c,
-        "volume": aggregate.v,
-        "vwap": getattr(aggregate, "vw", None),
+        "open": aggregate.open,
+        "high": aggregate.high,
+        "low": aggregate.low,
+        "close": aggregate.close,
+        "volume": aggregate.volume,
+        "vwap": getattr(aggregate, "vwap", None),
         "transactions": getattr(aggregate, "transactions", None),
     }
 
@@ -195,17 +195,14 @@ def fetch_grouped_price_rows(
     adjusted: bool,
 ) -> List[Dict[str, object]]:
 
-    response = client.get_grouped_daily_aggs(
-        market="stocks",
-        locale="us",
+    aggregates = client.get_grouped_daily_aggs(
         date=target_date.isoformat(),
         adjusted=adjusted,
     )
 
-    aggregates = getattr(response, "results", None) or []
     rows: List[Dict[str, object]] = []
     for aggregate in aggregates:
-        symbol = getattr(aggregate, "T", None)
+        symbol = getattr(aggregate, "ticker", None)
         if not symbol or symbol not in symbols:
             continue
         rows.append(to_price_row(symbol, aggregate, trade_date=target_date))
@@ -252,7 +249,6 @@ def main() -> None:
         )
     except Exception as exc:
         LOGGER.exception("Failed to fetch grouped aggregates for %s: %s", _date, exc)
-
     inserted = upsert_prices(engine, prices_table, rows, args.chunk_size)
     LOGGER.info("%s: stored %d rows", _date, inserted)
 
