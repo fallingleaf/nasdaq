@@ -7,7 +7,7 @@ import logging
 import os
 import time
 from datetime import date, datetime, timedelta
-from typing import Dict, Iterable, Iterator, List
+from typing import Dict, Iterable, Iterator, List, Set
 
 from polygon import RESTClient
 from polygon.rest import models as polygon_models
@@ -44,39 +44,10 @@ def parse_args() -> argparse.Namespace:
         help="Polygon API key (default: POLYGON_API_KEY env var)",
     )
     parser.add_argument(
-        "--start-date",
+        "--date",
         type=_parse_date,
         default=None,
-        help="Start date (YYYY-MM-DD). If omitted, resume from last stored date or lookback window.",
-    )
-    parser.add_argument(
-        "--end-date",
-        type=_parse_date,
-        default=None,
-        help="End date (YYYY-MM-DD). Default: today.",
-    )
-    parser.add_argument(
-        "--multiplier",
-        type=int,
-        default=1,
-        help="Aggregation multiplier (default: %(default)s)",
-    )
-    parser.add_argument(
-        "--timespan",
-        default="day",
-        help="Aggregation timespan (default: %(default)s)",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=5000,
-        help="Maximum results per request (default: %(default)s)",
-    )
-    parser.add_argument(
-        "--lookback-days",
-        type=int,
-        default=30,
-        help="When no start date and no existing data, number of days to fetch ending today (default: %(default)s)",
+        help="Date (YYYY-MM-DD). Default: today.",
     )
     parser.add_argument(
         "--chunk-size",
@@ -185,44 +156,60 @@ def upsert_prices(engine: Engine, table: Table, rows: List[Dict[str, object]], c
     return inserted
 
 
-def to_price_row(symbol: str, aggregate: polygon_models.Agg) -> Dict[str, object]:
-    trade_dt = datetime.utcfromtimestamp(aggregate.timestamp / 1000).date()
+def to_price_row(
+    symbol: str,
+    aggregate: polygon_models.Agg | polygon_models.GroupedDailyAgg,
+    trade_date: date | None = None,
+) -> Dict[str, object]:
+    timestamp = getattr(aggregate, "t", None)
+    if trade_date is None:
+        if timestamp is None:
+            raise ValueError("Aggregate is missing timestamp and trade_date is not provided.")
+        trade_dt = datetime.utcfromtimestamp(timestamp / 1000).date()
+    else:
+        trade_dt = trade_date
     return {
         "symbol": symbol,
         "trade_date": trade_dt,
-        "open": aggregate.open,
-        "high": aggregate.high,
-        "low": aggregate.low,
-        "close": aggregate.close,
-        "volume": aggregate.volume,
-        "vwap": getattr(aggregate, "vwap", None),
+        "open": aggregate.o,
+        "high": aggregate.h,
+        "low": aggregate.l,
+        "close": aggregate.c,
+        "volume": aggregate.v,
+        "vwap": getattr(aggregate, "vw", None),
         "transactions": getattr(aggregate, "transactions", None),
     }
 
 
-def fetch_price_rows(
+def date_range(start: date, end: date) -> Iterator[date]:
+    current = start
+    while current <= end:
+        yield current
+        current += timedelta(days=1)
+
+
+def fetch_grouped_price_rows(
     client: RESTClient,
-    symbol: str,
-    multiplier: int,
-    timespan: str,
-    start_date: date,
-    end_date: date,
-    limit: int,
+    target_date: date,
+    symbols: Set[str],
     adjusted: bool,
 ) -> List[Dict[str, object]]:
-    aggregates: List[Dict[str, object]] = []
-    for agg in client.list_aggs(
-        ticker=symbol,
-        multiplier=multiplier,
-        timespan=timespan,
-        from_=start_date.isoformat(),
-        to=end_date.isoformat(),
+
+    response = client.get_grouped_daily_aggs(
+        market="stocks",
+        locale="us",
+        date=target_date.isoformat(),
         adjusted=adjusted,
-        sort="asc",
-        limit=limit,
-    ):
-        aggregates.append(to_price_row(symbol, agg))
-    return aggregates
+    )
+
+    aggregates = getattr(response, "results", None) or []
+    rows: List[Dict[str, object]] = []
+    for aggregate in aggregates:
+        symbol = getattr(aggregate, "T", None)
+        if not symbol or symbol not in symbols:
+            continue
+        rows.append(to_price_row(symbol, aggregate, trade_date=target_date))
+    return rows
 
 
 def main() -> None:
@@ -232,15 +219,10 @@ def main() -> None:
     if not args.polygon_key:
         raise RuntimeError("Polygon API key is required. Provide via --polygon-key or POLYGON_API_KEY.")
 
-    end_date = args.end_date or date.today()
-    if end_date > date.today():
-        LOGGER.warning("End date %s is in the future; using today's date instead.", end_date)
-        end_date = date.today()
-
-    if args.start_date and args.start_date > end_date:
-        raise ValueError("Start date cannot be after end date.")
-
-    lookback_days = max(args.lookback_days, 1)
+    _date = args.date or date.today()
+    if _date > date.today():
+        LOGGER.warning("Date %s is in the future; using today's date instead.", _date)
+        _date = date.today()
 
     config = load_database_config_from_args(args)
     engine = create_engine_from_config(config)
@@ -251,57 +233,28 @@ def main() -> None:
         LOGGER.warning("No symbols found in companies table.")
         return
 
-    latest_trade_dates = fetch_latest_trade_dates(engine, prices_table)
-
     LOGGER.info(
         "Fetching prices for %d symbols up to %s (%s)",
         len(symbols),
-        end_date,
+        _date,
         "adjusted" if args.adjusted else "raw",
     )
-    if args.start_date:
-        LOGGER.info("Using explicit start date %s for all symbols.", args.start_date)
 
     client = RESTClient(args.polygon_key)
 
-    total_rows = 0
-    for symbol in symbols:
-        last_trade_date = latest_trade_dates.get(symbol)
-        if last_trade_date:
-            start_date = last_trade_date + timedelta(days=1)
-        elif args.start_date:
-            start_date = args.start_date
-        else:
-            start_date = end_date - timedelta(days=lookback_days - 1)
+    symbol_set = set(symbols)
+    try:
+        rows = fetch_grouped_price_rows(
+            client=client,
+            target_date=_date,
+            symbols=symbol_set,
+            adjusted=args.adjusted,
+        )
+    except Exception as exc:
+        LOGGER.exception("Failed to fetch grouped aggregates for %s: %s", _date, exc)
 
-        if start_date > end_date:
-            LOGGER.debug("%s: up to date (latest %s)", symbol, last_trade_date)
-            continue
-
-        try:
-            rows = fetch_price_rows(
-                client=client,
-                symbol=symbol,
-                multiplier=args.multiplier,
-                timespan=args.timespan,
-                start_date=start_date,
-                end_date=end_date,
-                limit=args.limit,
-                adjusted=args.adjusted,
-            )
-        except Exception as exc:
-            LOGGER.exception("Failed to fetch data for %s: %s", symbol, exc)
-            continue
-
-        inserted = upsert_prices(engine, prices_table, rows, args.chunk_size)
-        total_rows += inserted
-        LOGGER.info("%s: stored %d rows (from %s to %s)", symbol, inserted, start_date, end_date)
-
-        if args.sleep:
-            time.sleep(args.sleep)
-
-    LOGGER.info("Import complete. Stored %d rows.", total_rows)
-
+    inserted = upsert_prices(engine, prices_table, rows, args.chunk_size)
+    LOGGER.info("%s: stored %d rows", _date, inserted)
 
 if __name__ == "__main__":
     main()

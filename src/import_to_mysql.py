@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import glob
 import logging
+import math
 import os
 import re
 import time
@@ -108,7 +109,7 @@ def load_data_frames(data_dir: str) -> pd.DataFrame:
         missing_columns = [col for col in TARGET_COLUMNS if col not in normalized_df.columns]
         if missing_columns:
             LOGGER.warning(
-                "File %s is missing columns %s; filling them with null values",
+                "File %s is missing columns %s; filling them with 0 values",
                 path,
                 ", ".join(missing_columns),
             )
@@ -128,8 +129,7 @@ def load_data_frames(data_dir: str) -> pd.DataFrame:
     if "market_cap" in combined.columns:
         combined["market_cap"] = combined["market_cap"].map(parse_market_cap)
 
-    if "weighted_shares_outstanding" not in combined.columns:
-        combined["weighted_shares_outstanding"] = pd.NA
+    combined["weighted_shares_outstanding"] = 0
 
     combined = combined.drop_duplicates(subset=["symbol"], keep="last")
     LOGGER.info("Loaded %d unique symbols", len(combined))
@@ -148,7 +148,6 @@ def load_existing_companies(engine: Engine, companies: Table) -> pd.DataFrame:
     )
     frame["weighted_shares_outstanding"] = 0
     return frame
-
 
 def normalize_columns(frame: pd.DataFrame) -> pd.DataFrame:
     rename_map: Dict[str, str] = {}
@@ -170,6 +169,10 @@ def parse_market_cap(raw_value: object) -> int | None:
 
     number_part, suffix = value[1:-1], value[-1]
     number = float(number_part.replace(",", ""))
+    if math.isnan(number):
+        LOGGER.info("Invalid number: %s" % raw_value)
+        return 0
+
     multiplier = MARKET_CAP_MULTIPLIERS.get(suffix.upper(), 1)
     return int(number * multiplier)
 
