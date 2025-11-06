@@ -9,8 +9,8 @@ import time
 from datetime import date, datetime, timedelta
 from typing import Dict, Iterable, Iterator, List
 
-from polygon import RESTClient
-from polygon.rest import models as polygon_models
+from massive import RESTClient
+from massive.rest import models as massive_models
 from sqlalchemy import (
     BigInteger,
     Column,
@@ -185,7 +185,7 @@ def upsert_prices(engine: Engine, table: Table, rows: List[Dict[str, object]], c
     return inserted
 
 
-def to_price_row(symbol: str, aggregate: polygon_models.Agg) -> Dict[str, object]:
+def to_price_row(symbol: str, aggregate: massive_models.Agg) -> Dict[str, object]:
     trade_dt = datetime.utcfromtimestamp(aggregate.timestamp / 1000).date()
     return {
         "symbol": symbol,
