@@ -6,6 +6,7 @@ import argparse
 import logging
 import os
 from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 import pandas as pd
@@ -337,7 +338,8 @@ def main() -> None:
     args = parse_args()
     logging.basicConfig(level=getattr(logging, str(args.log_level).upper(), logging.INFO), format="%(levelname)s %(message)s")
 
-    report_date = args.report_date or date.today()
+    today = datetime.now(ZoneInfo("America/Los_Angeles")).date()
+    report_date = args.report_date or today
     config = load_database_config_from_args(args)
     engine = create_engine_from_config(config)
 

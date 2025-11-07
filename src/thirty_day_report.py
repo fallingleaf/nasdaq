@@ -6,7 +6,8 @@ import argparse
 import logging
 import os
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Iterable
 
@@ -281,10 +282,11 @@ def main() -> None:
     args = parse_args()
     logging.basicConfig(level=getattr(logging, str(args.log_level).upper(), logging.INFO), format="%(levelname)s %(message)s")
 
-    report_date = args.report_date or date.today()
-    if report_date > date.today():
+    today = datetime.now(ZoneInfo("America/Los_Angeles")).date()
+    report_date = args.report_date or today
+    if report_date > today:
         LOGGER.warning("Report date %s is in the future; using today's date.", report_date)
-        report_date = date.today()
+        report_date = today
 
     window = ReportWindow.from_end_and_span(report_date, args.lookback_days)
 

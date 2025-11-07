@@ -8,6 +8,7 @@ import os
 import time
 from datetime import date, datetime, timedelta
 from typing import Dict, Iterable, Iterator, List, Set
+from zoneinfo import ZoneInfo
 
 from massive import RESTClient
 from massive.rest import models as massive_models
@@ -216,10 +217,11 @@ def main() -> None:
     if not args.polygon_key:
         raise RuntimeError("Polygon API key is required. Provide via --polygon-key or POLYGON_API_KEY.")
 
-    _date = args.date or date.today()
-    if _date > date.today():
+    today = datetime.now(ZoneInfo("America/Los_Angeles")).date()
+    _date = args.date or today
+    if _date > today:
         LOGGER.warning("Date %s is in the future; using today's date instead.", _date)
-        _date = date.today()
+        _date = today
 
     config = load_database_config_from_args(args)
     engine = create_engine_from_config(config)
