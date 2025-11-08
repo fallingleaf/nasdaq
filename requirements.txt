@@ -6,3 +6,5 @@ massive
 PyYAML
 openai-agents
 cryptography
+flask
+gunicorn

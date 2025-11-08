@@ -1,0 +1,43 @@
+[Unit]
+Description=Nasdaq Database Query Tool - Gunicorn
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+Type=notify
+# Change this to your actual user
+User=www-data
+Group=www-data
+
+# Change this to your actual project path
+WorkingDirectory=/var/www/nasdaq
+Environment="PATH=/var/www/nasdaq/.venv/bin"
+Environment="APPLICATION_ROOT=/db"
+
+# Gunicorn configuration
+ExecStart=/var/www/nasdaq/.venv/bin/gunicorn \
+    --workers 4 \
+    --bind 127.0.0.1:8000 \
+    --timeout 120 \
+    --access-logfile /var/log/nasdaq/access.log \
+    --error-logfile /var/log/nasdaq/error.log \
+    --log-level info \
+    --chdir /var/www/nasdaq/src \
+    webapp:app
+
+# Restart configuration
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/nasdaq
+
+# Resource limits
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

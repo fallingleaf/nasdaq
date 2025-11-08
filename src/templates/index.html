@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasdaq Database Query Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 0;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        #tablesList {
+            list-style: none;
+        }
+
+        #tablesList li {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        #tablesList li:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        #tablesList li.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .main {
+            padding: 30px;
+        }
+
+        .query-section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        #queryInput {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        #queryInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+        }
+
+        .secondary-btn:hover {
+            background: #5a6268;
+        }
+
+        .examples {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .examples h4 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+
+        .example-query {
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .example-query:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        #schemaInfo {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            display: none;
+        }
+
+        #schemaInfo h4 {
+            margin-bottom: 10px;
+        }
+
+        .schema-table {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .schema-table th,
+        .schema-table td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #results {
+            margin-top: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .results-header h3 {
+            color: #333;
+        }
+
+        .row-count {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .error {
+            padding: 15px;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .success {
+            padding: 15px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nasdaq Database Query Tool</h1>
+            <p class="subtitle">Execute read-only SQL queries on the market data database</p>
+        </header>
+
+        <div class="content">
+            <aside class="sidebar">
+                <h3>Available Tables</h3>
+                <ul id="tablesList">
+                    <li class="loading">Loading...</li>
+                </ul>
+            </aside>
+
+            <main class="main">
+                <div id="schemaInfo"></div>
+
+                <div class="query-section">
+                    <label for="queryInput">SQL Query (SELECT only)</label>
+                    <textarea id="queryInput" placeholder="SELECT * FROM companies LIMIT 10"></textarea>
+
+                    <div class="button-group">
+                        <button id="executeBtn">Execute Query</button>
+                        <button id="clearBtn" class="secondary-btn">Clear</button>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Example Queries:</h4>
+                        <div class="example-query" data-query="SELECT * FROM companies LIMIT 10">Show 10 companies</div>
+                        <div class="example-query" data-query="SELECT * FROM prices WHERE symbol = 'AAPL' ORDER BY trade_date DESC LIMIT 20">Recent AAPL prices</div>
+                        <div class="example-query" data-query="SELECT symbol, event_type, event_date, sma_50, sma_200 FROM sma_events ORDER BY event_date DESC LIMIT 50">Recent SMA events</div>
+                        <div class="example-query" data-query="SELECT sector, COUNT(*) as count FROM companies GROUP BY sector ORDER BY count DESC">Companies by sector</div>
+                        <div class="example-query" data-query="SELECT c.symbol, c.company_name, c.sector, e.event_type, e.event_date FROM companies c JOIN sma_events e ON c.symbol = e.symbol WHERE e.event_type = 'golden_cross' ORDER BY e.event_date DESC LIMIT 20">Recent golden crosses</div>
+                    </div>
+                </div>
+
+                <div id="results"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const queryInput = document.getElementById('queryInput');
+        const executeBtn = document.getElementById('executeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const tablesList = document.getElementById('tablesList');
+        const schemaInfo = document.getElementById('schemaInfo');
+        const resultsDiv = document.getElementById('results');
+
+        // Load available tables
+        async function loadTables() {
+            try {
+                const response = await fetch('/tables');
+                const data = await response.json();
+
+                if (data.error) {
+                    tablesList.innerHTML = `<li style="color: red;">${data.error}</li>`;
+                    return;
+                }
+
+                tablesList.innerHTML = '';
+                data.tables.forEach(table => {
+                    const li = document.createElement('li');
+                    li.textContent = table;
+                    li.addEventListener('click', () => loadSchema(table));
+                    tablesList.appendChild(li);
+                });
+            } catch (error) {
+                tablesList.innerHTML = `<li style="color: red;">Failed to load tables</li>`;
+            }
+        }
+
+        // Load schema for a table
+        async function loadSchema(tableName) {
+            try {
+                // Update active state
+                document.querySelectorAll('#tablesList li').forEach(li => {
+                    li.classList.remove('active');
+                    if (li.textContent === tableName) {
+                        li.classList.add('active');
+                    }
+                });
+
+                const response = await fetch(`/schema/${tableName}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    schemaInfo.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                    schemaInfo.style.display = 'block';
+                    return;
+                }
+
+                let html = `<h4>Schema: ${tableName}</h4>`;
+                html += '<table class="schema-table"><tr><th>Field</th><th>Type</th><th>Null</th><th>Key</th></tr>';
+                data.columns.forEach(col => {
+                    html += `<tr>
+                        <td><strong>${col.field}</strong></td>
+                        <td>${col.type}</td>
+                        <td>${col.null}</td>
+                        <td>${col.key}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                schemaInfo.innerHTML = html;
+                schemaInfo.style.display = 'block';
+            } catch (error) {
+                schemaInfo.innerHTML = `<p style="color: red;">Failed to load schema</p>`;
+                schemaInfo.style.display = 'block';
+            }
+        }
+
+        // Execute query
+        async function executeQuery() {
+            const query = queryInput.value.trim();
+
+            if (!query) {
+                resultsDiv.innerHTML = '<div class="error">Please enter a query</div>';
+                return;
+            }
+
+            executeBtn.disabled = true;
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Executing query...</p></div>';
+
+            try {
+                const response = await fetch('/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="error"><strong>Error:</strong> ${data.error}</div>`;
+                    return;
+                }
+
+                // Display results
+                let html = '<div class="results-header">';
+                html += '<h3>Query Results</h3>';
+                html += `<span class="row-count">${data.row_count} row(s) returned</span>`;
+                html += '</div>';
+
+                if (data.rows.length === 0) {
+                    html += '<div class="success">Query executed successfully but returned no rows.</div>';
+                } else {
+                    html += '<div class="table-wrapper"><table>';
+                    html += '<thead><tr>';
+                    data.columns.forEach(col => {
+                        html += `<th>${col}</th>`;
+                    });
+                    html += '</tr></thead><tbody>';
+
+                    data.rows.forEach(row => {
+                        html += '<tr>';
+                        data.columns.forEach(col => {
+                            const value = row[col] === null ? '<em>NULL</em>' : row[col];
+                            html += `<td>${value}</td>`;
+                        });
+                        html += '</tr>';
+                    });
+
+                    html += '</tbody></table></div>';
+                }
+
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error"><strong>Error:</strong> ${error.message}</div>`;
+            } finally {
+                executeBtn.disabled = false;
+            }
+        }
+
+        // Event listeners
+        executeBtn.addEventListener('click', executeQuery);
+        clearBtn.addEventListener('click', () => {
+            queryInput.value = '';
+            resultsDiv.innerHTML = '';
+            schemaInfo.style.display = 'none';
+            document.querySelectorAll('#tablesList li').forEach(li => li.classList.remove('active'));
+        });
+
+        // Example query clicks
+        document.querySelectorAll('.example-query').forEach(elem => {
+            elem.addEventListener('click', () => {
+                queryInput.value = elem.getAttribute('data-query');
+            });
+        });
+
+        // Execute on Ctrl+Enter or Cmd+Enter
+        queryInput.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                executeQuery();
+            }
+        });
+
+        // Load tables on page load
+        loadTables();
+    </script>
+</body>
+</html>
