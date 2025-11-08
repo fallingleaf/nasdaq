@@ -1,7 +1,8 @@
 [Unit]
 Description=Nasdaq Database Query Tool - Gunicorn
-After=network.target mysql.service
-Requires=mysql.service
+After=network.target docker.service
+# Note: If using Docker for MySQL, ensure docker and docker-compose are running
+# If using native MySQL, change docker.service to mysql.service above
 
 [Service]
 Type=notify

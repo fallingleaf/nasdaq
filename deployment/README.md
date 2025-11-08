@@ -98,6 +98,12 @@ sudo nano /etc/systemd/system/nasdaq-webapp.service
 # - User and Group (e.g., your username or www-data)
 # - WorkingDirectory (should be /var/www/nasdaq)
 # - ExecStart path (should point to your venv)
+# - If using native MySQL instead of Docker, change "After=docker.service" to "After=mysql.service"
+
+# IMPORTANT: The service file uses docker.service by default (for Docker-based MySQL)
+# If you're using native MySQL, edit the [Unit] section:
+#   Change: After=network.target docker.service
+#   To:     After=network.target mysql.service
 
 # Reload systemd
 sudo systemctl daemon-reload
@@ -195,12 +201,35 @@ sudo netstat -tulpn | grep 8000
 /var/www/nasdaq/.venv/bin/pip list
 ```
 
+### "mysql.service not found" Error
+
+If you see an error about `mysql.service` not being found when starting the service:
+
+```bash
+# This happens when using Docker for MySQL instead of native MySQL
+# Edit the systemd service file:
+sudo nano /etc/systemd/system/nasdaq-webapp.service
+
+# In the [Unit] section, change:
+After=network.target docker.service
+# OR remove the docker.service dependency entirely if MySQL is remote:
+After=network.target
+
+# Then reload and restart:
+sudo systemctl daemon-reload
+sudo systemctl restart nasdaq-webapp
+```
+
 ### Database Connection Issues
 
 ```bash
 # Check if MySQL is running
 docker ps  # If using Docker
 sudo systemctl status mysql  # If using native MySQL
+
+# If using Docker, ensure Docker is running:
+sudo systemctl status docker
+docker-compose ps  # Check if MySQL container is running
 
 # Test database connection
 mysql -h 127.0.0.1 -u nasdaq_user -p nasdaq
