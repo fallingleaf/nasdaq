@@ -95,6 +95,7 @@ job_lock = threading.Lock()  # Thread lock for safe concurrent access
 
 # Constants
 MAX_LOG_LINES = 1000  # Maximum number of log lines to keep per job
+MAX_COMPLETED_JOBS = 10  # Maximum number of completed jobs to keep in memory
 VALID_SERVICES = [
     'fetch_prices',        # Fetch stock prices from Polygon API
     'daily_report',        # Generate daily market report
@@ -142,6 +143,47 @@ def is_read_only_query(query: str) -> bool:
             return False
 
     return True
+
+def cleanup_old_jobs():
+    """
+    Clean up old completed jobs to prevent memory overflow.
+
+    Keeps all running jobs and only the MAX_COMPLETED_JOBS most recent
+    completed/failed jobs. Should be called after each job completion.
+
+    This function is thread-safe and uses the job_lock.
+    """
+    with job_lock:
+        # Separate running and completed jobs
+        running_jobs = {}
+        completed_jobs = []
+
+        for job_id, job in jobs.items():
+            if job['status'] == 'running':
+                running_jobs[job_id] = job
+            else:
+                completed_jobs.append((job_id, job))
+
+        # Sort completed jobs by end_time (newest first)
+        # Jobs without end_time go to the end
+        completed_jobs.sort(
+            key=lambda x: x[1].get('end_time', ''),
+            reverse=True
+        )
+
+        # Keep only the most recent MAX_COMPLETED_JOBS completed jobs
+        jobs_to_keep = dict(completed_jobs[:MAX_COMPLETED_JOBS])
+
+        # Update global jobs dict with running + recent completed jobs
+        jobs.clear()
+        jobs.update(running_jobs)
+        jobs.update(jobs_to_keep)
+
+        # Log cleanup if jobs were removed
+        removed_count = len(completed_jobs) - len(jobs_to_keep)
+        if removed_count > 0:
+            print(f"Cleaned up {removed_count} old job(s). "
+                  f"Keeping {len(running_jobs)} running + {len(jobs_to_keep)} completed jobs.")
 
 # ============================================================================
 # DATABASE QUERY BLUEPRINT - Routes for /db/*
@@ -319,7 +361,9 @@ def run_service():
 @services_bp.route('/jobs')
 def list_jobs():
     """
-    List all jobs (running, completed, failed).
+    List recent jobs (running, completed, failed).
+
+    Returns most recent 10 jobs to keep UI clean and performant.
 
     Returns:
         JSON with list of jobs (without logs)
@@ -337,7 +381,10 @@ def list_jobs():
                 'end_time': job['end_time'],
                 'exit_code': job['exit_code']
             })
-        return jsonify({'jobs': job_list})
+
+        # Sort by start time (newest first) and limit to 10
+        job_list.sort(key=lambda x: x['start_time'], reverse=True)
+        return jsonify({'jobs': job_list[:10]})
 
 @services_bp.route('/jobs/<job_id>')
 def get_job_status(job_id):
@@ -503,6 +550,9 @@ def execute_job(job_id, service_name, params):
                 jobs[job_id]['end_time'] = datetime.now().isoformat()
                 jobs[job_id]['logs'].append(f"Service completed successfully")
 
+            # Clean up old jobs after completion
+            cleanup_old_jobs()
+
         finally:
             # Always restore original sys.argv
             sys.argv = original_argv
@@ -521,6 +571,9 @@ def execute_job(job_id, service_name, params):
             jobs[job_id]['end_time'] = datetime.now().isoformat()
             jobs[job_id]['logs'].append(f"Service exited with code {exit_code}")
 
+        # Clean up old jobs after completion
+        cleanup_old_jobs()
+
     except Exception as e:
         """Handle unexpected errors during job execution."""
         output_capture.flush()
@@ -534,6 +587,9 @@ def execute_job(job_id, service_name, params):
             # Add full traceback for debugging
             jobs[job_id]['logs'].append("Traceback:")
             jobs[job_id]['logs'].append(traceback.format_exc())
+
+        # Clean up old jobs after failure
+        cleanup_old_jobs()
 
 # ============================================================================
 # MAIN APPLICATION ROUTES

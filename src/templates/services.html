@@ -530,7 +530,10 @@
             </div>
 
             <div class="jobs-section">
-                <h2>🗂️ Job History</h2>
+                <h2>🗂️ Recent Job History</h2>
+                <p style="margin-bottom: 1rem; color: var(--dark-teal); opacity: 0.7; font-size: 0.9rem;">
+                    Showing the 10 most recent jobs • Auto-refreshes every 5 seconds
+                </p>
                 <button class="refresh-btn" onclick="loadJobs()">🔄 Refresh Jobs</button>
                 <div class="jobs-list" id="jobsList">
                     <div class="no-jobs">No jobs yet. Run a service to get started.</div>
@@ -553,6 +556,7 @@
 
         let selectedJobId = null;
         let autoRefreshInterval = null;
+        let previousJobsData = null;  // Cache previous job data to prevent flickering
 
         async function runService(serviceName, inputId, paramName) {
             const inputElement = document.getElementById(inputId);
@@ -654,20 +658,32 @@
                 const response = await fetch(`${basePath}/jobs`);
                 const data = await response.json();
 
+                // Check if job data has actually changed
+                const jobsDataString = JSON.stringify(data.jobs);
+                if (previousJobsData === jobsDataString) {
+                    // No changes, skip update to prevent flickering
+                    return;
+                }
+                previousJobsData = jobsDataString;
+
                 const jobsList = document.getElementById('jobsList');
 
+                // Handle empty state
                 if (data.jobs.length === 0) {
-                    jobsList.innerHTML = '<div class="no-jobs">No jobs yet. Run a service to get started.</div>';
+                    if (jobsList.innerHTML.indexOf('No jobs yet') === -1) {
+                        jobsList.innerHTML = '<div class="no-jobs">No jobs yet. Run a service to get started.</div>';
+                    }
                     return;
                 }
 
-                jobsList.innerHTML = '';
-                // Sort jobs by start time (newest first)
-                data.jobs.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
+                // Build new job list HTML
+                const fragment = document.createDocumentFragment();
 
                 data.jobs.forEach(job => {
                     const jobItem = document.createElement('div');
                     jobItem.className = 'job-item';
+                    jobItem.setAttribute('data-job-id', job.id);
+
                     if (job.id === selectedJobId) {
                         jobItem.classList.add('selected');
                     }
@@ -686,8 +702,12 @@
                     `;
 
                     jobItem.onclick = () => viewJobLogs(job.id);
-                    jobsList.appendChild(jobItem);
+                    fragment.appendChild(jobItem);
                 });
+
+                // Update DOM only if content changed
+                jobsList.innerHTML = '';
+                jobsList.appendChild(fragment);
 
                 // If a job is selected and still running, refresh its logs
                 if (selectedJobId) {
@@ -780,7 +800,7 @@
             }
             autoRefreshInterval = setInterval(() => {
                 loadJobs();
-            }, 3000); // Refresh every 3 seconds
+            }, 5000); // Refresh every 5 seconds
         }
 
         function stopAutoRefresh() {
