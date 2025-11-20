@@ -4,3 +4,9 @@ database:
   user: nasdaq_user
   password: nasdaq_pass
   name: nasdaq
+
+polygon:
+  api_key: "d_xbV20nkbLZTl74GO4miRrv_WSrrit9"  # Add your Polygon.io API key here
+
+openai:
+  api_key: ""  # Add your OpenAI API key here (for agent.py)

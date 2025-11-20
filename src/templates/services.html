@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services Manager - Masonias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --white: #FFFFFF;
+            --orange: #FF6B35;
+            --dark-teal: #004E64;
+            --light-teal: #00A5CF;
+            --cream: #FFF8F0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-teal);
+            background: linear-gradient(135deg, var(--cream) 0%, var(--white) 50%, #E8F4F8 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--dark-teal);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--orange);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 100px auto 40px;
+            padding: 0 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--light-teal) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: var(--cream);
+            border: 2px solid rgba(0, 78, 100, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: var(--orange);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .service-card h3 {
+            color: var(--dark-teal);
+            margin-bottom: 0.75rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .service-card p {
+            color: var(--dark-teal);
+            opacity: 0.8;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-teal);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(0, 78, 100, 0.2);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .run-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .run-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .jobs-section {
+            margin-top: 3rem;
+        }
+
+        .jobs-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-teal);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, var(--light-teal), var(--dark-teal));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 165, 207, 0.3);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 165, 207, 0.4);
+        }
+
+        .jobs-list {
+            border: 2px solid rgba(0, 78, 100, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--cream);
+        }
+
+        .job-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 78, 100, 0.1);
+            display: grid;
+            grid-template-columns: 120px 200px 180px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-item:hover {
+            background: var(--cream);
+        }
+
+        .job-item.selected {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 165, 207, 0.1));
+            border-left: 4px solid var(--orange);
+        }
+
+        .job-id {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+
+        .job-service {
+            font-weight: 600;
+            color: var(--dark-teal);
+        }
+
+        .job-time {
+            font-size: 0.9rem;
+            color: var(--dark-teal);
+            opacity: 0.7;
+        }
+
+        .job-params {
+            font-size: 0.9rem;
+            color: var(--dark-teal);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-running {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .logs-section {
+            margin-top: 2rem;
+            display: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logs-section.show {
+            display: block;
+        }
+
+        .logs-header {
+            background: linear-gradient(135deg, var(--dark-teal), #001F3F);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logs-header span {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .logs-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .logs-line {
+            margin-bottom: 0.25rem;
+            line-height: 1.5;
+        }
+
+        .close-logs {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .close-logs:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .no-jobs {
+            padding: 3rem;
+            text-align: center;
+            color: var(--dark-teal);
+            opacity: 0.6;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .jobs-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">🎨</div>
+                Masonias
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/db/">Database</a></li>
+                <li><a href="/services/" class="active">Services</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>⚡ Services Manager</h1>
+            <p class="subtitle">Execute data pipeline tasks and monitor jobs in real-time</p>
+        </header>
+
+        <div class="content">
+            <div id="message" class="message"></div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>📊 Fetch All Prices</h3>
+                    <p>Fetch stock prices for all companies from Polygon API and store them in the database</p>
+                    <div class="input-group">
+                        <label for="fetch-date">Date (YYYY-MM-DD)</label>
+                        <input type="date" id="fetch-date" placeholder="Leave empty for today">
+                    </div>
+                    <button class="run-btn" onclick="runService('fetch_prices', 'fetch-date', 'date')">Run Service</button>
+                </div>
+
+                <div class="service-card">
+                    <h3>📈 Generate Daily Report</h3>
+                    <p>Generate comprehensive market report for a specific trading day with price movements and events</p>
+                    <div class="input-group">
+                        <label for="daily-date">Report Date (YYYY-MM-DD)</label>
+                        <input type="date" id="daily-date" placeholder="Leave empty for today">
+                    </div>
+                    <button class="run-btn" onclick="runService('daily_report', 'daily-date', 'report_date')">Run Service</button>
+                </div>
+
+                <div class="service-card">
+                    <h3>📅 Generate 30-Day Report</h3>
+                    <p>Generate trailing 30-day market summary with performance analysis and trending data</p>
+                    <div class="input-group">
+                        <label for="thirty-date">Report End Date (YYYY-MM-DD)</label>
+                        <input type="date" id="thirty-date" placeholder="Leave empty for today">
+                    </div>
+                    <button class="run-btn" onclick="runService('thirty_day_report', 'thirty-date', 'report_date')">Run Service</button>
+                </div>
+
+                <div class="service-card">
+                    <h3>📉 Compute SMA Events</h3>
+                    <p>Calculate SMA crossover events (golden cross, death cross) and price crosses for all symbols</p>
+                    <div class="input-group">
+                        <label for="short-window">Short Window (default: 50)</label>
+                        <input type="number" id="short-window" placeholder="50" min="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="long-window">Long Window (default: 200)</label>
+                        <input type="number" id="long-window" placeholder="200" min="1">
+                    </div>
+                    <button class="run-btn" onclick="runSMAService()">Run Service</button>
+                </div>
+            </div>
+
+            <div class="jobs-section">
+                <h2>🗂️ Job History</h2>
+                <button class="refresh-btn" onclick="loadJobs()">🔄 Refresh Jobs</button>
+                <div class="jobs-list" id="jobsList">
+                    <div class="no-jobs">No jobs yet. Run a service to get started.</div>
+                </div>
+            </div>
+
+            <div class="logs-section" id="logsSection">
+                <div class="logs-header">
+                    <span id="logsTitle">Job Logs</span>
+                    <button class="close-logs" onclick="closeLogs()">✕ Close</button>
+                </div>
+                <div class="logs-content" id="logsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base path is always /services since we're using Flask blueprints
+        const basePath = '/services';
+
+        let selectedJobId = null;
+        let autoRefreshInterval = null;
+
+        async function runService(serviceName, inputId, paramName) {
+            const inputElement = document.getElementById(inputId);
+            const value = inputElement.value.trim();
+
+            const params = {};
+            if (value) {
+                params[paramName] = value;
+            }
+
+            try {
+                const response = await fetch(`${basePath}/run`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: serviceName,
+                        params: params
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(data.error, 'error');
+                    return;
+                }
+
+                showMessage(`✓ Job ${data.job_id} started successfully!`, 'success');
+
+                // Clear input
+                inputElement.value = '';
+
+                // Refresh jobs list
+                setTimeout(() => loadJobs(), 500);
+
+                // Start auto-refresh
+                startAutoRefresh();
+
+            } catch (error) {
+                showMessage(`✗ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function runSMAService() {
+            const shortWindowInput = document.getElementById('short-window');
+            const longWindowInput = document.getElementById('long-window');
+
+            const shortWindow = shortWindowInput.value.trim();
+            const longWindow = longWindowInput.value.trim();
+
+            const params = {};
+            if (shortWindow) {
+                params['short_window'] = parseInt(shortWindow);
+            }
+            if (longWindow) {
+                params['long_window'] = parseInt(longWindow);
+            }
+
+            try {
+                const response = await fetch(`${basePath}/run`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: 'compute_sma_events',
+                        params: params
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(data.error, 'error');
+                    return;
+                }
+
+                showMessage(`✓ Job ${data.job_id} started successfully!`, 'success');
+
+                // Clear inputs
+                shortWindowInput.value = '';
+                longWindowInput.value = '';
+
+                // Refresh jobs list
+                setTimeout(() => loadJobs(), 500);
+
+                // Start auto-refresh
+                startAutoRefresh();
+
+            } catch (error) {
+                showMessage(`✗ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadJobs() {
+            try {
+                const response = await fetch(`${basePath}/jobs`);
+                const data = await response.json();
+
+                const jobsList = document.getElementById('jobsList');
+
+                if (data.jobs.length === 0) {
+                    jobsList.innerHTML = '<div class="no-jobs">No jobs yet. Run a service to get started.</div>';
+                    return;
+                }
+
+                jobsList.innerHTML = '';
+                // Sort jobs by start time (newest first)
+                data.jobs.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
+
+                data.jobs.forEach(job => {
+                    const jobItem = document.createElement('div');
+                    jobItem.className = 'job-item';
+                    if (job.id === selectedJobId) {
+                        jobItem.classList.add('selected');
+                    }
+
+                    const startTime = new Date(job.start_time).toLocaleString();
+                    const params = Object.keys(job.params).length > 0
+                        ? Object.entries(job.params).map(([k, v]) => `${k}=${v}`).join(', ')
+                        : 'default';
+
+                    jobItem.innerHTML = `
+                        <div class="job-id">${job.id}</div>
+                        <div class="job-service">${job.service}</div>
+                        <div class="job-time">${startTime}</div>
+                        <div class="job-params">${params}</div>
+                        <div><span class="status-badge status-${job.status}">${job.status}</span></div>
+                    `;
+
+                    jobItem.onclick = () => viewJobLogs(job.id);
+                    jobsList.appendChild(jobItem);
+                });
+
+                // If a job is selected and still running, refresh its logs
+                if (selectedJobId) {
+                    const selectedJob = data.jobs.find(j => j.id === selectedJobId);
+                    if (selectedJob && selectedJob.status === 'running') {
+                        viewJobLogs(selectedJobId, false);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Failed to load jobs:', error);
+            }
+        }
+
+        async function viewJobLogs(jobId, scroll = true) {
+            try {
+                selectedJobId = jobId;
+
+                const response = await fetch(`${basePath}/jobs/${jobId}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(data.error, 'error');
+                    return;
+                }
+
+                const logsSection = document.getElementById('logsSection');
+                const logsTitle = document.getElementById('logsTitle');
+                const logsContent = document.getElementById('logsContent');
+
+                logsTitle.textContent = `📋 ${jobId} - ${data.service} (${data.status})`;
+
+                logsContent.innerHTML = '';
+                if (data.logs.length === 0) {
+                    logsContent.textContent = 'No logs yet...';
+                } else {
+                    data.logs.forEach(line => {
+                        const logLine = document.createElement('div');
+                        logLine.className = 'logs-line';
+                        logLine.textContent = line;
+                        logsContent.appendChild(logLine);
+                    });
+                }
+
+                logsSection.classList.add('show');
+
+                if (scroll) {
+                    // Scroll to logs section
+                    logsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                // Scroll logs content to bottom
+                logsContent.scrollTop = logsContent.scrollHeight;
+
+                // Update job list selection
+                document.querySelectorAll('.job-item').forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.querySelector('.job-id').textContent === jobId) {
+                        item.classList.add('selected');
+                    }
+                });
+
+            } catch (error) {
+                showMessage(`✗ Error loading logs: ${error.message}`, 'error');
+            }
+        }
+
+        function closeLogs() {
+            const logsSection = document.getElementById('logsSection');
+            logsSection.classList.remove('show');
+            selectedJobId = null;
+
+            document.querySelectorAll('.job-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} show`;
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 5000);
+        }
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            autoRefreshInterval = setInterval(() => {
+                loadJobs();
+            }, 3000); // Refresh every 3 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        // Load jobs on page load
+        loadJobs();
+        startAutoRefresh();
+
+        // Stop auto-refresh when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+    </script>
+</body>
+</html>

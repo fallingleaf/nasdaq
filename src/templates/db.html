@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nasdaq Database Query Tool</title>
+    <title>Database Query Tool - Masonias</title>
     <style>
         * {
             margin: 0;
@@ -11,54 +11,153 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            line-height: 1.6;
+        :root {
+            --white: #FFFFFF;
+            --orange: #FF6B35;
+            --dark-teal: #004E64;
+            --light-teal: #00A5CF;
+            --cream: #FFF8F0;
         }
 
-        .container {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-teal);
+            background: linear-gradient(135deg, var(--cream) 0%, var(--white) 50%, #E8F4F8 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--dark-teal);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--orange);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 100px auto 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
+        /* Header */
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--orange) 0%, var(--light-teal) 100%);
             color: white;
-            padding: 30px;
+            padding: 2rem 2rem;
         }
 
         h1 {
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .subtitle {
-            opacity: 0.9;
-            font-size: 14px;
+            opacity: 0.95;
+            font-size: 1.1rem;
         }
 
+        /* Content Layout */
         .content {
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 0;
+            min-height: 600px;
         }
 
+        /* Sidebar */
         .sidebar {
-            background: #f8f9fa;
-            padding: 20px;
-            border-right: 1px solid #dee2e6;
+            background: var(--cream);
+            padding: 2rem;
+            border-right: 1px solid rgba(0, 78, 100, 0.1);
         }
 
         .sidebar h3 {
-            font-size: 14px;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            color: #6c757d;
-            margin-bottom: 15px;
+            color: var(--dark-teal);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         #tablesList {
@@ -66,230 +165,268 @@
         }
 
         #tablesList li {
-            padding: 8px 12px;
-            margin-bottom: 5px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
             background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border: 2px solid transparent;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark-teal);
         }
 
         #tablesList li:hover {
-            background: #e9ecef;
-            border-color: #667eea;
+            background: white;
+            border-color: var(--orange);
+            transform: translateX(5px);
         }
 
         #tablesList li.active {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
             color: white;
-            border-color: #667eea;
+            border-color: transparent;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
         }
 
+        /* Main Content */
         .main {
-            padding: 30px;
+            padding: 2rem;
         }
 
         .query-section {
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: #333;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--dark-teal);
+            font-size: 1rem;
         }
 
         #queryInput {
             width: 100%;
             min-height: 150px;
-            padding: 15px;
-            border: 2px solid #dee2e6;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border: 2px solid rgba(0, 78, 100, 0.2);
+            border-radius: 12px;
+            font-family: 'Monaco', 'Courier New', monospace;
             font-size: 14px;
             resize: vertical;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            background: var(--cream);
+            color: var(--dark-teal);
         }
 
         #queryInput:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--orange);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
         .button-group {
-            margin-top: 15px;
+            margin-top: 1rem;
             display: flex;
-            gap: 10px;
+            gap: 1rem;
         }
 
         button {
-            padding: 12px 24px;
-            background: #667eea;
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background 0.2s;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
 
         button:hover {
-            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
 
         button:disabled {
             background: #ccc;
             cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
         }
 
         .secondary-btn {
-            background: #6c757d;
+            background: transparent;
+            color: var(--dark-teal);
+            border: 2px solid var(--dark-teal);
+            box-shadow: none;
         }
 
         .secondary-btn:hover {
-            background: #5a6268;
+            background: var(--dark-teal);
+            color: white;
         }
 
         .examples {
-            margin-top: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 6px;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 12px;
+            border: 2px solid rgba(0, 78, 100, 0.1);
         }
 
         .examples h4 {
-            font-size: 13px;
-            margin-bottom: 10px;
-            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: var(--dark-teal);
+            font-weight: 600;
         }
 
         .example-query {
             display: inline-block;
-            margin: 5px 5px 5px 0;
-            padding: 6px 12px;
+            margin: 0.25rem 0.5rem 0.25rem 0;
+            padding: 0.5rem 1rem;
             background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border: 2px solid rgba(0, 78, 100, 0.2);
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: var(--dark-teal);
+            font-weight: 500;
         }
 
         .example-query:hover {
-            background: #e9ecef;
-            border-color: #667eea;
+            background: var(--orange);
+            border-color: var(--orange);
+            color: white;
+            transform: translateY(-2px);
         }
 
         #schemaInfo {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
             background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 6px;
+            border: 2px solid var(--orange);
+            border-radius: 12px;
             display: none;
         }
 
         #schemaInfo h4 {
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
+            color: var(--dark-teal);
+            font-size: 1.1rem;
         }
 
         .schema-table {
             width: 100%;
-            font-size: 12px;
+            font-size: 0.9rem;
+            border-collapse: collapse;
         }
 
         .schema-table th,
         .schema-table td {
-            padding: 5px;
+            padding: 0.5rem;
             text-align: left;
+            border-bottom: 1px solid rgba(0, 78, 100, 0.1);
+        }
+
+        .schema-table th {
+            font-weight: 600;
+            color: var(--dark-teal);
         }
 
         #results {
-            margin-top: 30px;
+            margin-top: 2rem;
         }
 
         .results-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cream);
         }
 
         .results-header h3 {
-            color: #333;
+            color: var(--dark-teal);
+            font-size: 1.5rem;
         }
 
         .row-count {
-            color: #6c757d;
-            font-size: 14px;
+            color: var(--orange);
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .table-wrapper {
             overflow-x: auto;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
+            border: 2px solid rgba(0, 78, 100, 0.1);
+            border-radius: 12px;
+            background: white;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 0.9rem;
         }
 
         th {
-            background: #f8f9fa;
-            padding: 12px;
+            background: linear-gradient(135deg, var(--orange), var(--light-teal));
+            color: white;
+            padding: 1rem;
             text-align: left;
             font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
             position: sticky;
             top: 0;
         }
 
         td {
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid rgba(0, 78, 100, 0.1);
+            color: var(--dark-teal);
         }
 
         tbody tr:hover {
-            background: #f8f9fa;
+            background: var(--cream);
         }
 
         .error {
-            padding: 15px;
+            padding: 1rem;
             background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 6px;
-            margin-top: 15px;
+            border: 2px solid #f5c6cb;
+            border-radius: 12px;
+            margin-top: 1rem;
         }
 
         .success {
-            padding: 15px;
+            padding: 1rem;
             background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 6px;
-            margin-top: 15px;
+            border: 2px solid #c3e6cb;
+            border-radius: 12px;
+            margin-top: 1rem;
         }
 
         .loading {
             text-align: center;
-            padding: 40px;
-            color: #6c757d;
+            padding: 3rem;
+            color: var(--dark-teal);
         }
 
         .spinner {
             display: inline-block;
             width: 40px;
             height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 4px solid var(--cream);
+            border-top: 4px solid var(--orange);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -298,12 +435,46 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 78, 100, 0.1);
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">🎨</div>
+                Masonias
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/db/" class="active">Database</a></li>
+                <li><a href="/services/">Services</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
         <header>
-            <h1>Nasdaq Database Query Tool</h1>
+            <h1>🗄️ Database Query Tool</h1>
             <p class="subtitle">Execute read-only SQL queries on the market data database</p>
         </header>
 
@@ -328,7 +499,7 @@
                     </div>
 
                     <div class="examples">
-                        <h4>Example Queries:</h4>
+                        <h4>💡 Example Queries:</h4>
                         <div class="example-query" data-query="SELECT * FROM companies LIMIT 10">Show 10 companies</div>
                         <div class="example-query" data-query="SELECT * FROM prices WHERE symbol = 'AAPL' ORDER BY trade_date DESC LIMIT 20">Recent AAPL prices</div>
                         <div class="example-query" data-query="SELECT symbol, event_type, event_date, sma_50, sma_200 FROM sma_events ORDER BY event_date DESC LIMIT 50">Recent SMA events</div>
@@ -343,24 +514,15 @@
     </div>
 
     <script>
+        // Base path is always /db since we're using Flask blueprints
+        const basePath = '/db';
+
         const queryInput = document.getElementById('queryInput');
         const executeBtn = document.getElementById('executeBtn');
         const clearBtn = document.getElementById('clearBtn');
         const tablesList = document.getElementById('tablesList');
         const schemaInfo = document.getElementById('schemaInfo');
         const resultsDiv = document.getElementById('results');
-
-        // Detect base path from current URL
-        // This handles both /db/ prefix and root / deployment
-        let basePath = window.location.pathname;
-        // Remove trailing slash if present
-        if (basePath.endsWith('/')) {
-            basePath = basePath.slice(0, -1);
-        }
-        // If we're at root, basePath should be empty
-        if (basePath === '') {
-            basePath = '';
-        }
 
         // Load available tables
         async function loadTables() {
