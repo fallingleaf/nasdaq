@@ -2,6 +2,8 @@
 
 This guide explains how to deploy the Nasdaq Database Query Tool to a production server at `http://www.masionias.com/db/`.
 
+**⚠️ Important**: This guide is for **production deployment only**. For local testing, see `LOCAL_TESTING.md`.
+
 ## Prerequisites
 
 - Ubuntu/Debian Linux server with root or sudo access
@@ -92,7 +94,7 @@ sudo chmod 755 /var/log/nasdaq
 sudo cp deployment/nasdaq-webapp.service /etc/systemd/system/
 
 # Edit the service file to match your setup
-sudo nano /etc/systemd/system/nasdaq-webapp.service
+sudo vim /etc/systemd/system/nasdaq-webapp.service
 
 # Update these values:
 # - User and Group (e.g., your username or www-data)
@@ -261,6 +263,43 @@ sudo chown -R www-data:www-data /var/www/nasdaq
 sudo chown -R www-data:www-data /var/log/nasdaq
 sudo chmod -R 755 /var/log/nasdaq
 ```
+
+### 404 Error When Accessing /db/
+
+If you get a 404 error when accessing `http://www.masionias.com/db/`:
+
+**Cause**: The HTML template's JavaScript automatically detects the base path from the current URL. This should work out of the box.
+
+**Verification Steps**:
+
+```bash
+# 1. Check if nginx is routing correctly
+curl -I http://localhost/db/
+
+# 2. Check if gunicorn is receiving requests
+sudo tail -f /var/log/nasdaq/access.log
+
+# 3. Test direct access to gunicorn (bypass nginx)
+curl http://127.0.0.1:8000/
+
+# 4. Check nginx configuration
+sudo nginx -t
+cat /etc/nginx/sites-enabled/nasdaq
+```
+
+**Common Issues**:
+
+1. **Nginx not reloaded after configuration change**:
+   ```bash
+   sudo systemctl reload nginx
+   ```
+
+2. **Wrong location block in nginx**:
+   - Ensure the nginx config has `location /db/` block
+   - The rewrite rule should be: `rewrite ^/db/(.*) /$1 break;`
+
+3. **Application not receiving correct headers**:
+   - Check that `proxy_set_header X-Forwarded-Prefix /db;` is set in nginx config
 
 ## Maintenance
 

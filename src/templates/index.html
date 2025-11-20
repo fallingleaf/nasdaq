@@ -350,10 +350,15 @@
         const schemaInfo = document.getElementById('schemaInfo');
         const resultsDiv = document.getElementById('results');
 
+        // Detect base path from current URL
+        // This handles both /db/ prefix and root / deployment
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath.substring(0, currentPath.lastIndexOf('/'));
+
         // Load available tables
         async function loadTables() {
             try {
-                const response = await fetch('/tables');
+                const response = await fetch(`${basePath}/tables`);
                 const data = await response.json();
 
                 if (data.error) {
@@ -384,7 +389,7 @@
                     }
                 });
 
-                const response = await fetch(`/schema/${tableName}`);
+                const response = await fetch(`${basePath}/schema/${tableName}`);
                 const data = await response.json();
 
                 if (data.error) {
@@ -425,7 +430,7 @@
             resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Executing query...</p></div>';
 
             try {
-                const response = await fetch('/query', {
+                const response = await fetch(`${basePath}/query`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -283,4 +283,11 @@ The Flask app supports these environment variables:
 - **Process Manager**: systemd
 - **Logs**: `/var/log/nasdaq/` (access.log, error.log)
 
+### URL Path Handling
+
+The web application automatically detects its base path from the browser URL:
+- When deployed at `/db/`, all API calls use `/db/query`, `/db/tables`, etc.
+- When deployed at root `/`, all API calls use `/query`, `/tables`, etc.
+- No code changes needed - the JavaScript in `index.html` automatically detects the path
+
 For complete deployment instructions, see `deployment/README.md`.
