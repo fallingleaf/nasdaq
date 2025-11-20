@@ -352,8 +352,15 @@
 
         // Detect base path from current URL
         // This handles both /db/ prefix and root / deployment
-        const currentPath = window.location.pathname;
-        const basePath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath.substring(0, currentPath.lastIndexOf('/'));
+        let basePath = window.location.pathname;
+        // Remove trailing slash if present
+        if (basePath.endsWith('/')) {
+            basePath = basePath.slice(0, -1);
+        }
+        // If we're at root, basePath should be empty
+        if (basePath === '') {
+            basePath = '';
+        }
 
         // Load available tables
         async function loadTables() {
